@@ -32,7 +32,7 @@ Linux/MacOS users can run the following command instead:
 
 === Display Help
 
-To display the help message, just add the --help flag.
+To display the help message, just add the `--help` flag.
 
 [source,sh]
 ----
