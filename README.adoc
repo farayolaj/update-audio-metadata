@@ -1,0 +1,44 @@
+= Update Audio Metadata
+
+Update Audio Metadata is a CLI app that can help you update the metadata of your music files. It can only update the metadata of MP3 files at the moment, but there are plans to support other music formats later. You can use it on a single music file or a directory containing music files.
+
+== Getting Started
+
+This project uses Maven as its build tool. To get started, run the following command:
+
+[source,sh]
+----
+./mvnw clean package
+----
+
+=== Prerequisites
+
+1. Make sure you have Java 17 or above installed on your machine.
+2. This project uses ACRCloud for audio recognition. Since I can't make my API token available to the public, you have to provide your own API token. You can get one from https://www.acrcloud.com[ACRCloud]. Once you have your API token, you can set it in a `.env` file in the project root. There is a `.env.example` file in the project root that you can use as a template.
+
+This will build the project and create a runnable JAR file in the `target` directory. You can run the JAR file using the following command (replace `path/to/music/file` with the path to your music file):
+
+[source,sh]
+----
+java -jar target\update-audio-metadata-0.0.1-SNAPSHOT-jar-with-dependencies.jar path/to/music/file
+----
+
+Linux/MacOS users can run the following command instead:
+
+[source,sh]
+----
+./update-playlist.sh path/to/music/file
+----
+
+=== Display Help
+
+To display the help message, just add the --help flag.
+
+[source,sh]
+----
+java -jar target\update-audio-metadata-0.0.1-SNAPSHOT-jar-with-dependencies.jar --help
+----
+
+
+
+
