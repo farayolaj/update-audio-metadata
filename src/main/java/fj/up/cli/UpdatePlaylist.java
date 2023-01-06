@@ -23,8 +23,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 @Log
-@Command(name = "update-playlist", mixinStandardHelpOptions = true, version = "1.0.0",
-        description = "Updates the music metadata ")
+@Command(name = "update-playlist", mixinStandardHelpOptions = true, version = "0.0.1",
+        description = "Tool to update your music playlist's metadata.")
 public class UpdatePlaylist implements Callable<Integer> {
     private static final Set<String> SUPPORTED_FORMATS = Set.of("mp3");
 

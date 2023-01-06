@@ -30,13 +30,20 @@ Linux/MacOS users can run the following command instead:
 ./update-playlist.sh path/to/music/file
 ----
 
-=== Display Help
+=== Download
+There is a binary release https://github.com/farayolaj/update-audio-metadata/releases[here]. (Only for 64bit Linux systems at the moment). When using the binary, the environment variables should be set in your shell config file (for example, .bashrc) instead of `.env` file.
 
-To display the help message, just add the `--help` flag.
+=== Usage
 
-[source,sh]
+[sh,source]
 ----
-java -jar target\update-audio-metadata-0.0.1-SNAPSHOT-jar-with-dependencies.jar --help
+Usage: update-playlist [-hV] [-o=<outDir>] <inputPath>
+Updates the music metadata
+      <inputPath>         The directory containing the music files or a single
+                            music file.
+  -h, --help              Show this help message and exit.
+  -o, --output=<outDir>   The output directory. Defaults to "./updated"
+  -V, --version           Print version information and exit.
 ----
 
 
