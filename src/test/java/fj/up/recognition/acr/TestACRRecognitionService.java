@@ -1,6 +1,5 @@
 package fj.up.recognition.acr;
 
-import fj.up.recognition.RecognitionService;
 import fj.up.recognition.exceptions.RecognitionFailureException;
 import fj.up.recognition.result.RecognitionResult;
 import org.junit.jupiter.api.Assertions;
@@ -17,8 +16,7 @@ class TestACRRecognitionService {
             URL fileUrl = getClass().getClassLoader().getResource("FILE347.mp3");
             Assertions.assertNotNull(fileUrl);
             Path filePath = Paths.get(fileUrl.getPath()).toAbsolutePath();
-
-            RecognitionResult result = RecognitionService.identifyAudio(filePath);
+            RecognitionResult result = new ACRRecognitionService().identifyAudio(filePath);
 
             Assertions.assertEquals(0, result.status().code());
 

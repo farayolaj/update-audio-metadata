@@ -60,7 +60,8 @@ public class UpdatePlaylist implements Callable<Integer> {
         RecognitionMetadata metadata;
 
         try {
-            metadata = RecognitionService.identifyAudio(filePath).metadata();
+            RecognitionService recognitionService = RecognitionService.create();
+            metadata = recognitionService.identifyAudio(filePath).metadata();
         } catch (RecognitionFailureException e) {
             if (e.errorCode() == RecognitionErrorCode.NO_RECOGNITION) {
                 log.warn("Failed to recognize audio file: {}", filePath.toAbsolutePath());
