@@ -8,7 +8,7 @@ import fj.up.recognition.RecognitionService;
 import fj.up.recognition.exceptions.RecognitionErrorCode;
 import fj.up.recognition.exceptions.RecognitionFailureException;
 import fj.up.recognition.result.RecognitionMetadata;
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-@Log
+@Slf4j
 @Command(name = "update-playlist", mixinStandardHelpOptions = true, version = "0.0.1",
         description = "Tool to update your music playlist's metadata.")
 public class UpdatePlaylist implements Callable<Integer> {
@@ -45,7 +45,7 @@ public class UpdatePlaylist implements Callable<Integer> {
     @Override
     public Integer call() throws FileNotFoundException, UnsupportedFileFormatException,
             RecognitionFailureException, IOException {
-        log.info("Input Path: %s".formatted(inputPath.toAbsolutePath().toString()));
+        log.info("Input Path: {}", inputPath.toAbsolutePath());
         if (!inputPath.toFile().exists()) throw new FileNotFoundException(inputPath);
 
         if (Files.isDirectory(inputPath)) handleDirectory(inputPath);
@@ -63,7 +63,7 @@ public class UpdatePlaylist implements Callable<Integer> {
             metadata = RecognitionService.identifyAudio(filePath).metadata();
         } catch (RecognitionFailureException e) {
             if (e.errorCode() == RecognitionErrorCode.NO_RECOGNITION) {
-                log.warning("Failed to recognize audio file: %s".formatted(filePath.toAbsolutePath().toString()));
+                log.warn("Failed to recognize audio file: {}", filePath.toAbsolutePath());
                 System.out.println(
                         CommandLine.Help.Ansi.AUTO.string(
                                 "@|red Recognition failed for audio file: %s|@%n"
@@ -75,14 +75,14 @@ public class UpdatePlaylist implements Callable<Integer> {
         }
 
         if (metadata == null || metadata.music().isEmpty()) {
-            log.info("Recognised, but found no result for %s".formatted(filePath));
+            log.info("Recognised, but found no result for {}", filePath);
             System.out.println(CommandLine.Help.Ansi.AUTO.string(
                     "@|red Uh-oh... I couldn't find any metadata for %s|@%n".formatted(filePath)));
             return;
         }
 
 
-        log.info("Found %d result(s) for %s".formatted(metadata.music().size(), filePath));
+        log.info("Found {} result(s) for {}", metadata.music().size(), filePath);
 
         System.out.printf(
                 CommandLine.Help.Ansi.AUTO.string(
