@@ -20,6 +20,8 @@
         <mainClass>fj.up.UpdateAudioMetadataApplication</mainClass>
         <picocli.version>4.7.0</picocli.version>
         <lombok.version>1.18.24</lombok.version>
+        <native.maven.plugin.version>0.9.18</native.maven.plugin.version>
+        <imageName>update-playlist</imageName>
     </properties>
 
     <dependencyManagement>
@@ -98,6 +100,11 @@
             <artifactId>logback-core</artifactId>
             <version>1.4.5</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.soundlibs</groupId>
+            <artifactId>mp3spi</artifactId>
+            <version>1.9.5.4</version>
         </dependency>
     </dependencies>
 
@@ -205,5 +212,73 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>native</id>
+            <build>
+                <plugins>
+                    <!--<plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <version>${native.maven.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <executions>
+                            <execution>
+                                <id>build-native</id>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                            <execution>
+                                <id>test-native</id>
+                                <goals>
+                                    <goal>test</goal>
+                                </goals>
+                                <phase>test</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <fallback>false</fallback>
+                            <buildArgs>
+                                <arg>-H:DashboardDump=update-playlist -H:+DashboardAll</arg>
+                            </buildArgs>
+                            <agent>
+                                <enabled>true</enabled>
+                                <options>
+                                    <option>experimental-class-loader-support</option>
+                                </options>
+                            </agent>
+                        </configuration>
+                    </plugin>-->
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>native-build</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>native-image</executable>
+                                    <workingDirectory>${project.build.directory}</workingDirectory>
+                                    <arguments>
+                                        <argument>-H:IncludeResources="../conf/logging.properties"</argument>
+                                        <argument>-H:ReflectionConfigurationFiles="../reflectconfig.json"</argument>
+                                        <argument>-jar</argument>
+                                        <argument>${project.build.finalName}-jar-with-dependencies.jar</argument>
+                                        <argument>${imageName}</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 

@@ -18,6 +18,7 @@ public class UpdateAudioMetadataApplication {
         int exitCode = new CommandLine(new UpdatePlaylist(scanner, threadPool))
                 .setExecutionExceptionHandler((Exception ex, CommandLine cmd, ParseResult parseResult) -> {
                     log.error(ex.getMessage());
+                    ex.printStackTrace();
                     cmd.getErr().println(cmd.getColorScheme().errorText("Something went wrong: %s".formatted(ex.getMessage())));
 
                     return cmd.getExitCodeExceptionMapper() != null
