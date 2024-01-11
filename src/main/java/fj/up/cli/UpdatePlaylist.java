@@ -55,7 +55,7 @@ public class UpdatePlaylist implements Callable<Integer> {
     }
 
     private void handleFile(Path filePath) throws UnsupportedFileFormatException, RecognitionFailureException {
-        if (!isSupportedFormat(filePath)) throw new UnsupportedFileFormatException(filePath);
+        if (!isSupportedFormat(filePath)) throw new UnsupportedFileFormatException(filePath, SUPPORTED_FORMATS);
 
         RecognitionMetadata metadata;
 
