@@ -36,6 +36,8 @@ public class UpdatePlaylist implements Callable<Integer> {
     private final Path inputPath = Path.of(".");
     @CommandLine.Option(names = {"-o", "--output"}, description = "The output directory. Defaults to \"./updated\"")
     private final Path outDir = Path.of("updated");
+    @CommandLine.Option(names = {"-v", "--verbose"}, description = "Prints more information.")
+    private boolean verbose = false;
 
     public UpdatePlaylist(Scanner scanner, ExecutorService threadPool) {
         this.scanner = scanner;
@@ -45,13 +47,17 @@ public class UpdatePlaylist implements Callable<Integer> {
     @Override
     public Integer call() throws FileNotFoundException, UnsupportedFileFormatException,
             RecognitionFailureException, IOException {
-        log.info("Input Path: {}", inputPath.toAbsolutePath());
+        printVerbose("Input Path: %s".formatted(inputPath.toAbsolutePath()));
         if (!inputPath.toFile().exists()) throw new FileNotFoundException(inputPath);
 
         if (Files.isDirectory(inputPath)) handleDirectory(inputPath);
         else handleFile(inputPath);
 
         return 0;
+    }
+
+    private void printVerbose(String message) {
+        if (verbose) System.out.println(message);
     }
 
     private void handleFile(Path filePath) throws UnsupportedFileFormatException, RecognitionFailureException {
@@ -64,7 +70,6 @@ public class UpdatePlaylist implements Callable<Integer> {
             metadata = recognitionService.identifyAudio(filePath).metadata();
         } catch (RecognitionFailureException e) {
             if (e.errorCode() == RecognitionErrorCode.NO_RECOGNITION) {
-                log.warn("Failed to recognize audio file: {}", filePath.toAbsolutePath());
                 System.out.println(
                         CommandLine.Help.Ansi.AUTO.string(
                                 "@|red Recognition failed for audio file: %s|@%n"
@@ -76,14 +81,13 @@ public class UpdatePlaylist implements Callable<Integer> {
         }
 
         if (metadata == null || metadata.music().isEmpty()) {
-            log.info("Recognised, but found no result for {}", filePath);
             System.out.println(CommandLine.Help.Ansi.AUTO.string(
                     "@|red Uh-oh... I couldn't find any metadata for %s|@%n".formatted(filePath)));
             return;
         }
 
 
-        log.info("Found {} result(s) for {}", metadata.music().size(), filePath);
+        printVerbose("Found %s result(s) for %s".formatted(metadata.music().size(), filePath));
 
         System.out.printf(
                 CommandLine.Help.Ansi.AUTO.string(

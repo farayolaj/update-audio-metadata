@@ -1,14 +1,13 @@
 package fj.up;
 
 import fj.up.cli.UpdatePlaylist;
-import lombok.extern.slf4j.Slf4j;
-import picocli.CommandLine;
-import picocli.CommandLine.ParseResult;
-
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
+import picocli.CommandLine;
+import picocli.CommandLine.ParseResult;
 
 @Slf4j
 public class UpdateAudioMetadataApplication {
@@ -18,6 +17,7 @@ public class UpdateAudioMetadataApplication {
         int exitCode = new CommandLine(new UpdatePlaylist(scanner, threadPool))
                 .setExecutionExceptionHandler((Exception ex, CommandLine cmd, ParseResult parseResult) -> {
                     log.error(ex.getMessage());
+                    ex.printStackTrace();
                     cmd.getErr().println(cmd.getColorScheme().errorText("Something went wrong: %s".formatted(ex.getMessage())));
 
                     return cmd.getExitCodeExceptionMapper() != null
